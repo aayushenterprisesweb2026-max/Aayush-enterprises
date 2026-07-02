@@ -83,8 +83,8 @@ const verifySessionToken = (token, secret, expectedEmail) => {
 };
 
 const authConfig = () => {
-  const email = getEnv("vipul.m3011@gamil.com");
-  const password = getEnv("abc@123");
+  const email = getEnv("ADMIN_EMAIL");
+  const password = getEnv("ADMIN_PASSWORD");
   const secret = getEnv("ADMIN_SESSION_SECRET");
 
   if (!email || !password || !secret) {
@@ -105,3 +105,4 @@ export {
   isSecureRequest,
   verifySessionToken,
 };
+
