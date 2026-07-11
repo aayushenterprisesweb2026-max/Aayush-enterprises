@@ -13,9 +13,9 @@ const productFilters = [
   "All",
   "Personal Protective Equipment",
   "Unique Safety Products",
+  "Electrical Supplies",
   "Road Safety Products",
   "Lockout Tagout Products",
-  "Electrical Supplies",
   "Material Handling Equipments",
   "Training Kiosks",
 ];

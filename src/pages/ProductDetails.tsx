@@ -18,7 +18,9 @@ const ProductDetails = () => {
     );
   }
 
-  const related = products.filter((p) => p.id !== product.id).slice(0, 3);
+  const relatedSameCategory = products.filter((p) => p.id !== product.id && p.category === product.category).slice(0, 3);
+  const relatedFallback = products.filter((p) => p.id !== product.id && p.category !== product.category).slice(0, 3);
+  const related = relatedSameCategory.length > 0 ? relatedSameCategory : relatedFallback;
 
   return (
     <>
