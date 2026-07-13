@@ -45,7 +45,7 @@ export const company = {
 export const contactPersons: ContactPerson[] = [
   {
     name: "",
-    phone: "+91 7420846602",
+    phone: "+91 9423834722",
     phoneDigits: "917420846602",
   },
   {
@@ -55,15 +55,15 @@ export const contactPersons: ContactPerson[] = [
   },
   {
     name: "",
-    phone: "+91 9423834722",
+    phone: "+91 7420846602 ",
     phoneDigits: "919423834722",
   },
 ];
 
 export const emails = [
-  "sales@aayushenterprises.in",
-  "signages@aayushenterprises.in",
   "ayushenterprisesaurangabad@gmail.com",
+  "signages@aayushenterprises.in",
+  "sales@aayushenterprises.in",
 ];
 
 export const coreVerticals: CoreVertical[] = [
