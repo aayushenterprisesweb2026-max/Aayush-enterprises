@@ -18,24 +18,20 @@ export type Product = {
 
 export const categories = [
   "All",
-  "Head Protection",
-  "Hand Protection",
-  "Foot Protection",
-  "Protective Clothing",
-  "PPE Kits",
-  "Eye Protection",
-  "Respiratory Protection",
+  "Personal Protective Equipment",
+  "Material Handling Equipments",
   "Unique Safety Products",
   "Electrical Supplies",
   "Road Safety Products",
   "Lockout Tagout Products",
+  "Training Kiosks",
 ];
 
 export const products: Product[] = [
   {
     id: "industrial-safety-helmet",
     name: "Industrial Safety Helmet",
-    category: "Head Protection",
+    category: "Personal Protective Equipment",
     image: helmet,
     shortDesc: "ABS shell with 6-point suspension for industrial sites.",
     description:
@@ -50,7 +46,7 @@ export const products: Product[] = [
   {
     id: "industrial-hand-gloves",
     name: "Industrial Hand Gloves",
-    category: "Hand Protection",
+    category: "Personal Protective Equipment",
     image: gloves,
     shortDesc: "Grip-focused gloves for mechanical and general protection.",
     description:
@@ -65,7 +61,7 @@ export const products: Product[] = [
   {
     id: "safety-shoes",
     name: "Safety Shoes",
-    category: "Foot Protection",
+    category: "Personal Protective Equipment",
     image: shoes,
     shortDesc: "Slip-resistant shoes for workplace protection.",
     description:
@@ -80,7 +76,7 @@ export const products: Product[] = [
   {
     id: "reflective-safety-jacket",
     name: "Reflective Safety Jacket",
-    category: "Protective Clothing",
+    category: "Personal Protective Equipment",
     image: jacket,
     shortDesc: "High-visibility jacket for road and site work.",
     description:
@@ -95,7 +91,7 @@ export const products: Product[] = [
   {
     id: "complete-ppe-kit",
     name: "Complete PPE Safety Kit",
-    category: "PPE Kits",
+    category: "Personal Protective Equipment",
     image: ppe,
     shortDesc: "Head-to-toe protection bundle for work sites.",
     description:
@@ -110,7 +106,7 @@ export const products: Product[] = [
   {
     id: "safety-goggles",
     name: "Safety Goggles",
-    category: "Eye Protection",
+    category: "Personal Protective Equipment",
     image: goggles,
     shortDesc: "Eye protection for dust, splash and debris.",
     description:
@@ -125,7 +121,7 @@ export const products: Product[] = [
   {
     id: "respiratory-protection-kit",
     name: "Respiratory Protection Kit",
-    category: "Respiratory Protection",
+    category: "Personal Protective Equipment",
     image: ppe,
     shortDesc: "Respiratory gear for dust and vapour exposure.",
     description:
@@ -135,6 +131,21 @@ export const products: Product[] = [
       { label: "Use", value: "Dust and vapour exposure" },
       { label: "Compatibility", value: "PAPR and filters" },
       { label: "Application", value: "Industrial safety" },
+    ],
+  },
+  {
+    id: "hydraulic-hand-pallet-truck-2000-7000-kg",
+    name: "Hydraulic Hand Pallet Truck - 2000-7000 kg",
+    category: "Material Handling Equipments",
+    image: "/assets/material-handling/hydraulic-hand-pallet-truck.svg",
+    shortDesc: "Manual hydraulic pallet truck for warehouse and loading movement.",
+    description:
+      "Hydraulic hand pallet truck built for everyday material handling tasks in warehouses, shops, loading bays and storage areas. The truck is designed for smooth lifting and controlled movement of palletized loads.",
+    specs: [
+      { label: "Capacity", value: "2000-7000 kg" },
+      { label: "Type", value: "Hydraulic hand pallet truck" },
+      { label: "Operation", value: "Manual hydraulic" },
+      { label: "Application", value: "Warehouse and material movement" },
     ],
   },
   ...uniqueSafetyProducts,

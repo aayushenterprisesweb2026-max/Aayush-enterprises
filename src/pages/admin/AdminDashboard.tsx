@@ -83,7 +83,7 @@ const makeEmptyProduct = (): ProductDraft => ({
   id: createId("product"),
   name: "",
   slug: "",
-  category: categories[1] ?? "Head Protection",
+  category: categories[1] ?? "Personal Protective Equipment",
   image: "",
   shortDesc: "",
   description: "",

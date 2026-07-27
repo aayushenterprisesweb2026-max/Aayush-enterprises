@@ -25,7 +25,7 @@ const Enquiry = () => {
     email: "",
     phone: "",
     company: "",
-    category: "Head Protection",
+    category: "Personal Protective Equipment",
     quantity: "",
     message: "",
   });
@@ -38,7 +38,15 @@ const Enquiry = () => {
       return;
     }
     toast.success("Enquiry received! We'll send a quote shortly.");
-    setForm({ name: "", email: "", phone: "", company: "", category: "Head Protection", quantity: "", message: "" });
+    setForm({
+      name: "",
+      email: "",
+      phone: "",
+      company: "",
+      category: "Personal Protective Equipment",
+      quantity: "",
+      message: "",
+    });
   };
 
   const waMsg = `Hi! Quote request:\nCategory: ${form.category}\nQty: ${form.quantity || "TBD"}\nName: ${form.name || "-"}`;

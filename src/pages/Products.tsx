@@ -65,14 +65,6 @@ const productFilters = [
   "Training Kiosks",
 ];
 
-const filterCategoryMap: Record<string, string[]> = {
-  "Personal Protective Equipment": [
-    "Hand Protection",
-    "Head Protection",
-    "Foot Protection",
-    "Eye Protection",
-  ],
-};
 const Products = () => {
   const [active, setActive] = useState("All");
   const filtered = useMemo(() => {
@@ -80,8 +72,7 @@ const Products = () => {
       return products;
     }
 
-    const mappedCategories = filterCategoryMap[active] ?? [active];
-    return products.filter((p) => mappedCategories.includes(p.category));
+    return products.filter((p) => p.category === active);
   }, [active]);
 
   return (
