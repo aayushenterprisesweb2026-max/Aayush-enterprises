@@ -152,7 +152,7 @@ const Home = () => {
         <div className="container grid lg:grid-cols-[1fr_1.4fr] gap-12 items-start">
           <div>
             <div className="text-xs font-bold uppercase tracking-[0.3em] text-muted-foreground mb-3">
-              <span className="text-primary">â—</span> FAQ
+              <span className="text-primary"></span> FAQ
             </div>
             <h2 className="font-display text-4xl md:text-5xl uppercase leading-tight">Questions?<br />We&apos;ve Got Answers.</h2>
             <p className="mt-4 text-muted-foreground">Use this brochure-backed summary to understand the company scope before you enquire.</p>
