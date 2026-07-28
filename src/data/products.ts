@@ -133,21 +133,6 @@ export const products: Product[] = [
       { label: "Application", value: "Industrial safety" },
     ],
   },
-  {
-    id: "hydraulic-hand-pallet-truck-2000-7000-kg",
-    name: "Hydraulic Hand Pallet Truck - 2000-7000 kg",
-    category: "Material Handling Equipments",
-    image: "/assets/material-handling/hydraulic-hand-pallet-truck.svg",
-    shortDesc: "Manual hydraulic pallet truck for warehouse and loading movement.",
-    description:
-      "Hydraulic hand pallet truck built for everyday material handling tasks in warehouses, shops, loading bays and storage areas. The truck is designed for smooth lifting and controlled movement of palletized loads.",
-    specs: [
-      { label: "Capacity", value: "2000-7000 kg" },
-      { label: "Type", value: "Hydraulic hand pallet truck" },
-      { label: "Operation", value: "Manual hydraulic" },
-      { label: "Application", value: "Warehouse and material movement" },
-    ],
-  },
   ...uniqueSafetyProducts,
   {
     id: "honeywell-electrosoft-leather-protector-over-gloves",

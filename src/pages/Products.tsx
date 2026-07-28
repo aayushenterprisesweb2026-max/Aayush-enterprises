@@ -54,6 +54,22 @@ const safetyCatalogs = [
   },
 ];
 
+const trainingKiosksCatalog = {
+  label: "Catalog",
+  title: "View and download the Training Kiosks catalog.",
+  description:
+    "Open the PDF in the browser to browse the Training Kiosks catalog, or download it for offline viewing and sharing.",
+  pdf: assetUrl("Ayush enterprises-traning kiosks catlog.pdf"),
+};
+
+const materialHandlingCatalog = {
+  label: "Catalog",
+  title: "View and download the Material Handling catalog.",
+  description:
+    "Open the PDF in the browser to browse the Material Handling catalog, or download it for offline viewing and sharing.",
+  pdf: assetUrl("MATERIAL-HANDLING-CATALOG NEW.pdf"),
+};
+
 const productFilters = [
   "All",
   "Personal Protective Equipment",
@@ -101,7 +117,79 @@ const Products = () => {
             ))}
           </div>
 
-          {filtered.length === 0 ? (
+          {active === "Material Handling Equipments" ? (
+            <div className="grid gap-10 lg:grid-cols-[1fr_1.1fr] items-start">
+              <div>
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-primary text-primary-foreground text-xs font-bold uppercase tracking-[0.2em] mb-4">
+                  <FileText className="h-4 w-4" />
+                  {materialHandlingCatalog.label}
+                </div>
+                <h2 className="font-display text-4xl md:text-5xl uppercase leading-tight max-w-xl">
+                  {materialHandlingCatalog.title}
+                </h2>
+                <p className="mt-4 text-muted-foreground leading-relaxed max-w-xl">
+                  {materialHandlingCatalog.description}
+                </p>
+
+                <div className="mt-8 flex flex-wrap gap-3">
+                  <Button asChild size="lg" className="bg-secondary text-secondary-foreground hover:bg-secondary/90 font-bold uppercase tracking-wider h-14 px-8">
+                    <a href={materialHandlingCatalog.pdf} target="_blank" rel="noopener noreferrer">
+                      View Catalog <ExternalLink className="ml-2 h-4 w-4" />
+                    </a>
+                  </Button>
+                  <Button asChild size="lg" variant="outline" className="border-2 border-secondary font-bold uppercase tracking-wider h-14 px-8">
+                    <a href={materialHandlingCatalog.pdf} download>
+                      Download PDF <FileDown className="ml-2 h-4 w-4" />
+                    </a>
+                  </Button>
+                </div>
+              </div>
+
+              <div className="border-2 border-secondary bg-background shadow-bold overflow-hidden">
+                <iframe
+                  title={materialHandlingCatalog.label}
+                  src={materialHandlingCatalog.pdf}
+                  className="h-[70vh] w-full"
+                />
+              </div>
+            </div>
+          ) : active === "Training Kiosks" ? (
+            <div className="grid gap-10 lg:grid-cols-[1fr_1.1fr] items-start">
+              <div>
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-primary text-primary-foreground text-xs font-bold uppercase tracking-[0.2em] mb-4">
+                  <FileText className="h-4 w-4" />
+                  {trainingKiosksCatalog.label}
+                </div>
+                <h2 className="font-display text-4xl md:text-5xl uppercase leading-tight max-w-xl">
+                  {trainingKiosksCatalog.title}
+                </h2>
+                <p className="mt-4 text-muted-foreground leading-relaxed max-w-xl">
+                  {trainingKiosksCatalog.description}
+                </p>
+
+                <div className="mt-8 flex flex-wrap gap-3">
+                  <Button asChild size="lg" className="bg-secondary text-secondary-foreground hover:bg-secondary/90 font-bold uppercase tracking-wider h-14 px-8">
+                    <a href={trainingKiosksCatalog.pdf} target="_blank" rel="noopener noreferrer">
+                      View Catalog <ExternalLink className="ml-2 h-4 w-4" />
+                    </a>
+                  </Button>
+                  <Button asChild size="lg" variant="outline" className="border-2 border-secondary font-bold uppercase tracking-wider h-14 px-8">
+                    <a href={trainingKiosksCatalog.pdf} download>
+                      Download PDF <FileDown className="ml-2 h-4 w-4" />
+                    </a>
+                  </Button>
+                </div>
+              </div>
+
+              <div className="border-2 border-secondary bg-background shadow-bold overflow-hidden">
+                <iframe
+                  title={trainingKiosksCatalog.label}
+                  src={trainingKiosksCatalog.pdf}
+                  className="h-[70vh] w-full"
+                />
+              </div>
+            </div>
+          ) : filtered.length === 0 ? (
             <p className="text-center text-muted-foreground py-12">No products in this category yet.</p>
           ) : (
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
