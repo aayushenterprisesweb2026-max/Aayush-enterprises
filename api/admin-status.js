@@ -1,14 +1,53 @@
-import { authConfig, getCookies, verifySessionToken } from "./_auth.js";
+import { getCookies, verifySessionToken } from "./_auth.js";
+import { query } from "../backend/lib/db.mjs";
 
 export default async function handler(req, res) {
   res.setHeader("Cache-Control", "no-store");
 
   try {
-    const config = authConfig();
-    const cookies = getCookies(req);
-    const authenticated = verifySessionToken(cookies.aayush_admin_session, config.secret, config.email);
+    const secret = process.env.ADMIN_SESSION_SECRET;
+    if (!secret) {
+      res.status(500).json({ authenticated: false, error: "Missing ADMIN_SESSION_SECRET" });
+      return;
+    }
 
-    res.status(200).json({ authenticated });
+    const cookies = getCookies(req);
+    const token = cookies.aayush_admin_session;
+    if (!token || !token.includes(".")) {
+      res.status(200).json({ authenticated: false });
+      return;
+    }
+
+    const [encodedPayload] = token.split(".");
+    let payload;
+    try {
+      payload = JSON.parse(Buffer.from(encodedPayload, "base64url").toString("utf8"));
+    } catch {
+      res.status(200).json({ authenticated: false });
+      return;
+    }
+
+    if (typeof payload.email !== "string" || !payload.email) {
+      res.status(200).json({ authenticated: false });
+      return;
+    }
+
+    const [rows] = await query(
+      `
+        SELECT id, email, is_active
+        FROM admin_users
+        WHERE email = ?
+        LIMIT 1
+      `,
+      [payload.email],
+    );
+
+    res.status(200).json({
+      authenticated:
+        rows.length > 0 &&
+        Number(rows[0].is_active) === 1 &&
+        verifySessionToken(token, secret, rows[0].email),
+    });
   } catch (error) {
     res.status(500).json({
       authenticated: false,

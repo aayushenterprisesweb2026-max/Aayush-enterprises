@@ -1,15 +1,14 @@
 import http from "node:http";
 import {
-  authConfig,
   cookieHeader,
   createSessionToken,
   getCookies,
   isSecureRequest,
   verifySessionToken,
 } from "../api/_auth.js";
+import { query } from "../backend/lib/db.mjs";
+import { verifyPassword } from "../backend/lib/passwords.mjs";
 
-process.env.ADMIN_EMAIL ||= "admin@example.com";
-process.env.ADMIN_PASSWORD ||= "admin1234";
 process.env.ADMIN_SESSION_SECRET ||= "local-dev-secret";
 
 const host = process.env.HOST || "127.0.0.1";
@@ -47,9 +46,38 @@ const server = http.createServer(async (req, res) => {
         return;
       }
 
-      const config = authConfig();
+      const secret = process.env.ADMIN_SESSION_SECRET;
       const cookies = getCookies(req);
-      const authenticated = verifySessionToken(cookies.aayush_admin_session, config.secret, config.email);
+      const token = cookies.aayush_admin_session;
+
+      if (!secret || !token || !token.includes(".")) {
+        sendJson(res, 200, { authenticated: false });
+        return;
+      }
+
+      const [encodedPayload] = token.split(".");
+      let payload;
+      try {
+        payload = JSON.parse(Buffer.from(encodedPayload, "base64url").toString("utf8"));
+      } catch {
+        sendJson(res, 200, { authenticated: false });
+        return;
+      }
+
+      const [rows] = await query(
+        `
+          SELECT id, email, is_active
+          FROM admin_users
+          WHERE email = ?
+          LIMIT 1
+        `,
+        [payload.email],
+      );
+
+      const authenticated =
+        rows.length > 0 &&
+        Number(rows[0].is_active) === 1 &&
+        verifySessionToken(token, secret, rows[0].email);
 
       sendJson(res, 200, { authenticated });
       return;
@@ -64,14 +92,44 @@ const server = http.createServer(async (req, res) => {
       const rawBody = await readBody(req);
       const body = rawBody ? JSON.parse(rawBody) : {};
       const { email, password } = body;
-      const config = authConfig();
+      const secret = process.env.ADMIN_SESSION_SECRET;
 
-      if (email !== config.email || password !== config.password) {
+      if (!secret) {
+        sendJson(res, 500, { authenticated: false, error: "Missing ADMIN_SESSION_SECRET" });
+        return;
+      }
+
+      const [rows] = await query(
+        `
+          SELECT id, full_name, email, password_hash, is_active
+          FROM admin_users
+          WHERE email = ?
+          LIMIT 1
+        `,
+        [String(email || "").trim()],
+      );
+
+      if (rows.length === 0) {
         sendJson(res, 401, { authenticated: false });
         return;
       }
 
-      const token = createSessionToken(email, config.secret);
+      const admin = rows[0];
+      if (Number(admin.is_active) !== 1 || !verifyPassword(String(password || ""), admin.password_hash)) {
+        sendJson(res, 401, { authenticated: false });
+        return;
+      }
+
+      await query(
+        `
+          UPDATE admin_users
+          SET last_login_at = CURRENT_TIMESTAMP
+          WHERE id = ?
+        `,
+        [admin.id],
+      );
+
+      const token = createSessionToken(admin.email, secret);
       res.setHeader("Set-Cookie", cookieHeader(token, 8 * 60 * 60, isSecureRequest(req)));
       sendJson(res, 200, { authenticated: true });
       return;

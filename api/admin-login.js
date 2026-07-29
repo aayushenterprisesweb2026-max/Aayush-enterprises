@@ -1,4 +1,6 @@
-import { authConfig, cookieHeader, createSessionToken, isSecureRequest } from "./_auth.js";
+import { cookieHeader, createSessionToken, isSecureRequest } from "./_auth.js";
+import { query } from "../backend/lib/db.mjs";
+import { verifyPassword } from "../backend/lib/passwords.mjs";
 
 export default async function handler(req, res) {
   res.setHeader("Cache-Control", "no-store");
@@ -11,14 +13,44 @@ export default async function handler(req, res) {
   try {
     const body = typeof req.body === "string" ? JSON.parse(req.body || "{}") : req.body || {};
     const { email, password } = body;
-    const config = authConfig();
+    const secret = process.env.ADMIN_SESSION_SECRET;
 
-    if (email !== config.email || password !== config.password) {
+    if (!secret) {
+      res.status(500).json({ authenticated: false, error: "Missing ADMIN_SESSION_SECRET" });
+      return;
+    }
+
+    const [rows] = await query(
+      `
+        SELECT id, full_name, email, password_hash, is_active
+        FROM admin_users
+        WHERE email = ?
+        LIMIT 1
+      `,
+      [String(email || "").trim()],
+    );
+
+    if (rows.length === 0) {
       res.status(401).json({ authenticated: false });
       return;
     }
 
-    const token = createSessionToken(email, config.secret);
+    const admin = rows[0];
+    if (Number(admin.is_active) !== 1 || !verifyPassword(String(password || ""), admin.password_hash)) {
+      res.status(401).json({ authenticated: false });
+      return;
+    }
+
+    await query(
+      `
+        UPDATE admin_users
+        SET last_login_at = CURRENT_TIMESTAMP
+        WHERE id = ?
+      `,
+      [admin.id],
+    );
+
+    const token = createSessionToken(admin.email, secret);
     res.setHeader("Set-Cookie", cookieHeader(token, 8 * 60 * 60, isSecureRequest(req)));
     res.status(200).json({ authenticated: true });
   } catch (error) {
