@@ -29,6 +29,7 @@ import {
 } from "./lib/content.mjs";
 import { isDatabaseConfigured, pingDatabase } from "./lib/db.mjs";
 import { handleOptions, readJsonBody, sendBuffer, sendError, sendJson, sendText, toInteger } from "./lib/http.mjs";
+import { authConfig, cookieHeader, createSessionToken, getCookies, isSecureRequest, verifySessionToken } from "../api/_auth.js";
 
 const host = process.env.HOST || "0.0.0.0";
 const port = toInteger(process.env.PORT || process.env.BACKEND_PORT || 3000, 3000);
@@ -147,6 +148,44 @@ const server = http.createServer(async (req, res) => {
         databaseConfigured: isDatabaseConfigured(),
         databaseConnected,
       });
+      return;
+    }
+
+    if (pathname === "/api/admin-status" && req.method === "GET") {
+      try {
+        const config = authConfig();
+        const cookies = getCookies(req);
+        const authenticated = verifySessionToken(cookies.aayush_admin_session, config.secret, config.email);
+        sendJson(res, 200, { authenticated });
+      } catch (error) {
+        sendError(res, 500, error instanceof Error ? error.message : "Server error");
+      }
+      return;
+    }
+
+    if (pathname === "/api/admin-login" && req.method === "POST") {
+      try {
+        const body = await readJsonBody(req);
+        const { email, password } = body;
+        const config = authConfig();
+
+        if (email !== config.email || password !== config.password) {
+          sendJson(res, 401, { authenticated: false });
+          return;
+        }
+
+        const token = createSessionToken(email, config.secret);
+        res.setHeader("Set-Cookie", cookieHeader(token, 8 * 60 * 60, isSecureRequest(req)));
+        sendJson(res, 200, { authenticated: true });
+      } catch (error) {
+        sendError(res, 500, error instanceof Error ? error.message : "Server error");
+      }
+      return;
+    }
+
+    if (pathname === "/api/admin-logout" && req.method === "POST") {
+      res.setHeader("Set-Cookie", cookieHeader("", 0, isSecureRequest(req)));
+      sendJson(res, 200, { authenticated: false });
       return;
     }
 

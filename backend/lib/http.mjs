@@ -4,6 +4,7 @@ const corsOrigin = process.env.CORS_ORIGIN || "*";
 
 export const commonHeaders = {
   "Access-Control-Allow-Origin": corsOrigin,
+  "Access-Control-Allow-Credentials": "true",
   "Access-Control-Allow-Methods": "GET,POST,PUT,PATCH,DELETE,OPTIONS",
   "Access-Control-Allow-Headers": "Content-Type, Authorization",
   "Access-Control-Max-Age": "86400",

@@ -1,8 +1,9 @@
 import { Outlet, Link, NavLink } from "react-router-dom";
-import { FileText, Home, LayoutDashboard, ShieldCheck } from "lucide-react";
+import { FileText, Home, LayoutDashboard, LogOut, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import logo from "@/assets/logo-aayush.webp";
+import { signOutAdmin } from "@/lib/admin-auth";
 
 const adminNav = [
   { to: "/admin", label: "Dashboard", icon: LayoutDashboard },
@@ -12,6 +13,11 @@ const adminNav = [
 ];
 
 const AdminLayout = () => {
+  const handleLogout = async () => {
+    await signOutAdmin();
+    window.location.href = "/admin/login";
+  };
+
   return (
     <div className="min-h-screen bg-[linear-gradient(180deg,hsl(var(--muted))_0%,hsl(var(--background))_36%)]">
       <header className="border-b-2 border-secondary bg-background/95 backdrop-blur">
@@ -33,6 +39,18 @@ const AdminLayout = () => {
           <div className="flex items-center gap-2">
             <Button asChild variant="outline" className="hidden sm:inline-flex border-2 border-secondary font-bold uppercase tracking-wider">
               <Link to="/">View Site</Link>
+            </Button>
+            <Button asChild variant="outline" className="border-2 border-secondary font-bold uppercase tracking-wider">
+              <Link to="/admin/login">Login</Link>
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={handleLogout}
+              className="border-2 border-secondary font-bold uppercase tracking-wider"
+            >
+              <LogOut className="mr-2 h-4 w-4" />
+              Logout
             </Button>
             <div className="hidden rounded-full border-2 border-secondary bg-secondary/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.3em] text-secondary sm:inline-flex">
               UI only

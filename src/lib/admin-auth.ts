@@ -2,6 +2,8 @@ type AdminAuthResponse = {
   authenticated: boolean;
 };
 
+const apiBase = (import.meta.env.VITE_API_BASE_URL || "").replace(/\/$/, "");
+
 const getOptions = (method: "GET" | "POST" = "GET", body?: BodyInit) => ({
   method,
   headers: body ? { "Content-Type": "application/json" } : undefined,
@@ -11,7 +13,7 @@ const getOptions = (method: "GET" | "POST" = "GET", body?: BodyInit) => ({
 
 export const verifyAdminSession = async () => {
   try {
-    const response = await fetch("/api/admin-status", getOptions());
+    const response = await fetch(`${apiBase}/api/admin-status`, getOptions());
 
     if (!response.ok) {
       return false;
@@ -27,7 +29,7 @@ export const verifyAdminSession = async () => {
 export const signInAdmin = async (email: string, password: string) => {
   try {
     const response = await fetch(
-      "/api/admin-login",
+      `${apiBase}/api/admin-login`,
       getOptions("POST", JSON.stringify({ email, password })),
     );
 
@@ -44,7 +46,7 @@ export const signInAdmin = async (email: string, password: string) => {
 
 export const signOutAdmin = async () => {
   try {
-    await fetch("/api/admin-logout", getOptions("POST"));
+    await fetch(`${apiBase}/api/admin-logout`, getOptions("POST"));
   } catch {
     // Ignore logout failures; the local session is server-controlled.
   }
