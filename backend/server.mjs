@@ -27,9 +27,10 @@ import {
   updateProduct,
   updateService,
 } from "./lib/content.mjs";
-import { isDatabaseConfigured, pingDatabase } from "./lib/db.mjs";
+import { isDatabaseConfigured, pingDatabase, query } from "./lib/db.mjs";
+import { verifyPassword } from "./lib/passwords.mjs";
 import { handleOptions, readJsonBody, sendBuffer, sendError, sendJson, sendText, toInteger } from "./lib/http.mjs";
-import { authConfig, cookieHeader, createSessionToken, getCookies, isSecureRequest, verifySessionToken } from "../api/_auth.js";
+import { cookieHeader, createSessionToken, getCookies, isSecureRequest, verifySessionToken } from "../api/_auth.js";
 
 const host = process.env.HOST || "0.0.0.0";
 const port = toInteger(process.env.PORT || process.env.BACKEND_PORT || 3000, 3000);
@@ -153,9 +154,36 @@ const server = http.createServer(async (req, res) => {
 
     if (pathname === "/api/admin-status" && req.method === "GET") {
       try {
-        const config = authConfig();
+        const secret = process.env.ADMIN_SESSION_SECRET;
+        if (!secret) {
+          sendError(res, 500, "Missing ADMIN_SESSION_SECRET");
+          return;
+        }
+
         const cookies = getCookies(req);
-        const authenticated = verifySessionToken(cookies.aayush_admin_session, config.secret, config.email);
+        const token = cookies.aayush_admin_session;
+
+        if (!token || !token.includes(".")) {
+          sendJson(res, 200, { authenticated: false });
+          return;
+        }
+
+        const [payload] = token.split(".");
+        const session = JSON.parse(Buffer.from(payload, "base64url").toString("utf8"));
+        const [rows] = await query(
+          `
+            SELECT id, email, is_active
+            FROM admin_users
+            WHERE email = ?
+            LIMIT 1
+          `,
+          [session.email],
+        );
+
+        const authenticated =
+          rows.length > 0 &&
+          Number(rows[0].is_active) === 1 &&
+          verifySessionToken(token, secret, rows[0].email);
         sendJson(res, 200, { authenticated });
       } catch (error) {
         sendError(res, 500, error instanceof Error ? error.message : "Server error");
@@ -167,14 +195,43 @@ const server = http.createServer(async (req, res) => {
       try {
         const body = await readJsonBody(req);
         const { email, password } = body;
-        const config = authConfig();
+        const secret = process.env.ADMIN_SESSION_SECRET;
+        if (!secret) {
+          sendError(res, 500, "Missing ADMIN_SESSION_SECRET");
+          return;
+        }
 
-        if (email !== config.email || password !== config.password) {
+        const [rows] = await query(
+          `
+            SELECT id, full_name, email, password_hash, is_active
+            FROM admin_users
+            WHERE email = ?
+            LIMIT 1
+          `,
+          [String(email || "").trim()],
+        );
+
+        if (rows.length === 0) {
           sendJson(res, 401, { authenticated: false });
           return;
         }
 
-        const token = createSessionToken(email, config.secret);
+        const admin = rows[0];
+        if (Number(admin.is_active) !== 1 || !verifyPassword(String(password || ""), admin.password_hash)) {
+          sendJson(res, 401, { authenticated: false });
+          return;
+        }
+
+        await query(
+          `
+            UPDATE admin_users
+            SET last_login_at = CURRENT_TIMESTAMP
+            WHERE id = ?
+          `,
+          [admin.id],
+        );
+
+        const token = createSessionToken(admin.email, secret);
         res.setHeader("Set-Cookie", cookieHeader(token, 8 * 60 * 60, isSecureRequest(req)));
         sendJson(res, 200, { authenticated: true });
       } catch (error) {
