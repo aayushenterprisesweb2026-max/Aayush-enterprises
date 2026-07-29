@@ -27,6 +27,13 @@ This project is ready to be deployed as a single Node.js app on Hostinger.
    - optional `DB_SSL=true`
 8. Redeploy the app.
 
+## Split deployments
+
+If you deploy the frontend and backend as separate Hostinger apps, use:
+
+- Frontend: `VITE_API_BASE_URL=https://api.aayushenterprises.in`
+- Backend: `CORS_ORIGIN=https://aayushenterprises.in`
+
 ## Expected app settings
 
 - Output directory: `dist`
