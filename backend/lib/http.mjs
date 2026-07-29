@@ -1,6 +1,6 @@
 import path from "node:path";
 
-const corsOrigin = process.env.CORS_ORIGIN || "*";
+const corsOrigin = process.env.CORS_ORIGIN || "https://aayushenterprises.in";
 
 export const commonHeaders = {
   "Access-Control-Allow-Origin": corsOrigin,

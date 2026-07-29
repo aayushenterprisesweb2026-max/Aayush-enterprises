@@ -2,7 +2,11 @@ type AdminAuthResponse = {
   authenticated: boolean;
 };
 
-const apiBase = (import.meta.env.VITE_API_BASE_URL || "").replace(/\/$/, "");
+const apiBase =
+  ((import.meta.env.VITE_API_BASE_URL || (import.meta.env.PROD ? "https://api.aayushenterprises.in" : "")) as string).replace(
+    /\/$/,
+    "",
+  );
 
 const getOptions = (method: "GET" | "POST" = "GET", body?: BodyInit) => ({
   method,
