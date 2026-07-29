@@ -63,13 +63,20 @@ export const isDatabaseConfigured = () => Boolean(getDatabaseConfig());
 export const pingDatabase = async () => {
   const client = getPool();
   if (!client) {
+    console.error("Database ping skipped: configuration is missing.");
     return false;
   }
 
   try {
     await client.query("SELECT 1");
     return true;
-  } catch {
+  } catch (error) {
+    console.error("Database ping failed:", {
+      code: error?.code,
+      errno: error?.errno,
+      sqlState: error?.sqlState,
+      message: error instanceof Error ? error.message : String(error),
+    });
     return false;
   }
 };
