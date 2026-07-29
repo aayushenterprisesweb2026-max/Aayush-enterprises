@@ -1,6 +1,6 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { ShieldCheck, ArrowRight, Loader2, LockKeyhole, Mail } from "lucide-react";
+import { ShieldCheck, ArrowRight, Loader2, LockKeyhole, Mail, Eye, EyeOff } from "lucide-react";
 import { toast } from "sonner";
 import logo from "@/assets/logo-aayush.webp";
 import { Button } from "@/components/ui/button";
@@ -16,6 +16,7 @@ const AdminLogin = () => {
   const [email, setEmail] = useState("aayushenterprisesweb2026@gmail.com");
   const [password, setPassword] = useState("AayushWeb@2026##");
   const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
     let mounted = true;
@@ -132,13 +133,24 @@ const AdminLogin = () => {
                     <LockKeyhole className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                     <Input
                       id="admin-password"
-                      type="password"
+                      type={showPassword ? "text" : "password"}
                       value={password}
                       onChange={(event) => setPassword(event.target.value)}
                       autoComplete="current-password"
-                      className="h-12 border-2 border-background bg-background pl-10 text-foreground"
+                      className="h-12 border-2 border-background bg-background pl-10 pr-12 text-foreground"
                       placeholder="Enter password"
                     />
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      className="absolute right-1 top-1/2 h-10 w-10 -translate-y-1/2 text-muted-foreground hover:bg-transparent hover:text-foreground"
+                      onClick={() => setShowPassword((current) => !current)}
+                      aria-label={showPassword ? "Hide password" : "Show password"}
+                      title={showPassword ? "Hide password" : "Show password"}
+                    >
+                      {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    </Button>
                   </div>
                 </div>
 
