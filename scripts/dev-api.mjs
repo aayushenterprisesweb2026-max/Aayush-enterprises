@@ -6,6 +6,7 @@ import {
   isSecureRequest,
   verifySessionToken,
 } from "../api/_auth.js";
+import { isBootstrapAdminEmail, seedBootstrapAdmin, verifyBootstrapAdminCredentials } from "../backend/lib/admin-bootstrap.mjs";
 import { query } from "../backend/lib/db.mjs";
 import { verifyPassword } from "../backend/lib/passwords.mjs";
 
@@ -64,6 +65,11 @@ const server = http.createServer(async (req, res) => {
         return;
       }
 
+      if (isBootstrapAdminEmail(payload.email)) {
+        sendJson(res, 200, { authenticated: verifySessionToken(token, secret, payload.email) });
+        return;
+      }
+
       const [rows] = await query(
         `
           SELECT id, email, is_active
@@ -96,6 +102,14 @@ const server = http.createServer(async (req, res) => {
 
       if (!secret) {
         sendJson(res, 500, { authenticated: false, error: "Missing ADMIN_SESSION_SECRET" });
+        return;
+      }
+
+      if (verifyBootstrapAdminCredentials(email, password)) {
+        await seedBootstrapAdmin(query);
+        const token = createSessionToken(String(email || "").trim().toLowerCase(), secret);
+        res.setHeader("Set-Cookie", cookieHeader(token, 8 * 60 * 60, isSecureRequest(req)));
+        sendJson(res, 200, { authenticated: true });
         return;
       }
 

@@ -1,4 +1,5 @@
 import { cookieHeader, createSessionToken, isSecureRequest } from "./_auth.js";
+import { seedBootstrapAdmin, verifyBootstrapAdminCredentials } from "../backend/lib/admin-bootstrap.mjs";
 import { query } from "../backend/lib/db.mjs";
 import { verifyPassword } from "../backend/lib/passwords.mjs";
 
@@ -17,6 +18,14 @@ export default async function handler(req, res) {
 
     if (!secret) {
       res.status(500).json({ authenticated: false, error: "Missing ADMIN_SESSION_SECRET" });
+      return;
+    }
+
+    if (verifyBootstrapAdminCredentials(email, password)) {
+      await seedBootstrapAdmin(query);
+      const token = createSessionToken(String(email || "").trim().toLowerCase(), secret);
+      res.setHeader("Set-Cookie", cookieHeader(token, 8 * 60 * 60, isSecureRequest(req)));
+      res.status(200).json({ authenticated: true });
       return;
     }
 

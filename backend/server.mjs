@@ -27,6 +27,7 @@ import {
   updateProduct,
   updateService,
 } from "./lib/content.mjs";
+import { isBootstrapAdminEmail, seedBootstrapAdmin, verifyBootstrapAdminCredentials } from "./lib/admin-bootstrap.mjs";
 import { isDatabaseConfigured, pingDatabase, query } from "./lib/db.mjs";
 import { verifyPassword } from "./lib/passwords.mjs";
 import { handleOptions, readJsonBody, sendBuffer, sendError, sendJson, sendText, toInteger } from "./lib/http.mjs";
@@ -170,6 +171,12 @@ const server = http.createServer(async (req, res) => {
 
         const [payload] = token.split(".");
         const session = JSON.parse(Buffer.from(payload, "base64url").toString("utf8"));
+
+        if (isBootstrapAdminEmail(session.email)) {
+          sendJson(res, 200, { authenticated: verifySessionToken(token, secret, session.email) });
+          return;
+        }
+
         const [rows] = await query(
           `
             SELECT id, email, is_active
@@ -198,6 +205,14 @@ const server = http.createServer(async (req, res) => {
         const secret = process.env.ADMIN_SESSION_SECRET;
         if (!secret) {
           sendError(res, 500, "Missing ADMIN_SESSION_SECRET");
+          return;
+        }
+
+        if (verifyBootstrapAdminCredentials(email, password)) {
+          await seedBootstrapAdmin(query);
+          const token = createSessionToken(String(email || "").trim().toLowerCase(), secret);
+          res.setHeader("Set-Cookie", cookieHeader(token, 8 * 60 * 60, isSecureRequest(req)));
+          sendJson(res, 200, { authenticated: true });
           return;
         }
 
