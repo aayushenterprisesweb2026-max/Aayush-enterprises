@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import PageHero from "@/components/PageHero";
 import { COMPANY_ADDRESS, whatsappLink } from "@/lib/whatsapp";
 import { company, contactPersons, emails } from "@/data/brochure";
+import { submitWeb3Form } from "@/lib/web3forms";
 
 const schema = z.object({
   name: z.string().trim().min(2, "Name is required").max(100),
@@ -20,19 +21,34 @@ const Contact = () => {
   const [form, setForm] = useState({ name: "", email: "", phone: "", message: "" });
   const [submitting, setSubmitting] = useState(false);
 
-  const onSubmit = (e: React.FormEvent) => {
+  const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const result = schema.safeParse(form);
     if (!result.success) {
       toast.error(result.error.errors[0].message);
       return;
     }
+
     setSubmitting(true);
-    setTimeout(() => {
+
+    try {
+      await submitWeb3Form("New contact message", {
+        name: result.data.name,
+        email: result.data.email,
+        phone: result.data.phone,
+        message: result.data.message,
+      });
       toast.success("Message sent! We'll respond within 24 hours.");
       setForm({ name: "", email: "", phone: "", message: "" });
+    } catch (error) {
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Unable to send your message. Please try again.",
+      );
+    } finally {
       setSubmitting(false);
-    }, 600);
+    }
   };
 
   return (
