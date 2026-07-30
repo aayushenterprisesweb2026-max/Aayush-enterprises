@@ -388,37 +388,57 @@ const AdminDashboard = () => {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-10 pb-8">
       <section className="rounded-3xl border-2 border-secondary bg-[radial-gradient(circle_at_top_left,hsl(var(--primary))/0.18,transparent_35%),linear-gradient(180deg,hsl(var(--card))_0%,hsl(var(--background))_90%)] p-6 shadow-bold md:p-8">
-        <div className="flex flex-wrap items-start justify-between gap-6">
+        <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_320px]">
           <div className="max-w-3xl">
             <div className="inline-flex items-center gap-2 border-2 border-secondary bg-background px-3 py-1.5 text-xs font-bold uppercase tracking-[0.3em]">
               <ShieldCheck className="h-4 w-4 text-primary" />
               Content Studio
             </div>
-            <h1 className="mt-4 font-display text-4xl uppercase leading-tight md:text-6xl">
+            <h1 className="mt-4 max-w-2xl font-display text-4xl uppercase leading-tight md:text-6xl">
               Build the admin UI first. Connect the database later.
             </h1>
             <p className="mt-4 max-w-2xl text-base leading-relaxed text-muted-foreground md:text-lg">
               Products can be organized by category, services can be edited section by section, and blogs can be
               drafted, reviewed and published from the same workspace.
             </p>
+
+            <div className="mt-6 flex flex-wrap gap-3">
+              <Button asChild variant="outline" className="border-2 border-secondary font-bold uppercase tracking-wider">
+                <Link to="/products">
+                  View Products
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
+              </Button>
+              <Button asChild className="border-2 border-secondary bg-secondary font-bold uppercase tracking-wider text-secondary-foreground hover:bg-secondary/90">
+                <Link to="/public-release">Open Public Release</Link>
+              </Button>
+            </div>
           </div>
 
-          <div className="flex flex-wrap gap-3">
-            <Button asChild variant="outline" className="border-2 border-secondary font-bold uppercase tracking-wider">
-              <Link to="/products">
-                View Products
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Link>
-            </Button>
-            <Button asChild className="border-2 border-secondary bg-secondary font-bold uppercase tracking-wider text-secondary-foreground hover:bg-secondary/90">
-              <Link to="/public-release">Open Public Release</Link>
-            </Button>
+          <div className="grid gap-3 self-start rounded-3xl border-2 border-secondary bg-background/80 p-4 shadow-sm">
+            <div className="rounded-2xl border border-border bg-muted/30 p-4">
+              <div className="text-xs font-bold uppercase tracking-[0.25em] text-muted-foreground">Workspace</div>
+              <div className="mt-2 font-display text-2xl uppercase">Admin panel</div>
+              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                Use this workspace to manage products, services and blog drafts.
+              </p>
+            </div>
+            <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-1">
+              <div className="rounded-2xl border border-border bg-muted/20 p-4">
+                <div className="text-xs font-bold uppercase tracking-[0.25em] text-muted-foreground">Mode</div>
+                <div className="mt-2 font-display text-xl uppercase">UI + backend</div>
+              </div>
+              <div className="rounded-2xl border border-border bg-muted/20 p-4">
+                <div className="text-xs font-bold uppercase tracking-[0.25em] text-muted-foreground">Session</div>
+                <div className="mt-2 font-display text-xl uppercase">Cookie auth</div>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div className="mt-8 grid gap-4 md:grid-cols-4">
+        <div className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
           <Card className="border-2 border-secondary shadow-bold">
             <CardContent className="p-4">
               <div className="text-xs font-bold uppercase tracking-[0.25em] text-muted-foreground">Products</div>
@@ -474,7 +494,7 @@ const AdminDashboard = () => {
         </div>
 
         <TabsContent value="products" className="space-y-6">
-          <div className="grid gap-6 xl:grid-cols-[360px_1fr]">
+          <div className="grid gap-6 xl:grid-cols-[360px_minmax(0,1fr)]">
             <Card className="border-2 border-secondary shadow-bold">
               <CardHeader className="space-y-3">
                 <div className="flex items-center justify-between gap-3">
@@ -571,7 +591,7 @@ const AdminDashboard = () => {
               </CardContent>
             </Card>
 
-            <div className="grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
+            <div className="grid gap-6 xl:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">
               <Card className="border-2 border-secondary shadow-bold">
                 <CardHeader>
                   <div className="flex flex-wrap items-start justify-between gap-3">
@@ -1059,7 +1079,7 @@ Training topic three"
         </TabsContent>
 
         <TabsContent value="blogs" className="space-y-6">
-          <div className="grid gap-6 xl:grid-cols-[360px_1fr]">
+          <div className="grid gap-6 xl:grid-cols-[360px_minmax(0,1fr)]">
             <Card className="border-2 border-secondary shadow-bold">
               <CardHeader className="space-y-3">
                 <div className="flex items-center justify-between gap-3">
@@ -1138,7 +1158,7 @@ Training topic three"
               </CardContent>
             </Card>
 
-            <div className="grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
+            <div className="grid gap-6 xl:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">
               <Card className="border-2 border-secondary shadow-bold">
                 <CardHeader>
                   <div className="flex flex-wrap items-start justify-between gap-3">

@@ -1,4 +1,4 @@
-import { Outlet, Link, NavLink } from "react-router-dom";
+import { Outlet, Link, NavLink, useNavigate } from "react-router-dom";
 import { FileText, Home, LayoutDashboard, LogOut, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -13,35 +13,31 @@ const adminNav = [
 ];
 
 const AdminLayout = () => {
+  const navigate = useNavigate();
+
   const handleLogout = async () => {
     await signOutAdmin();
-    window.location.href = "/admin/login";
+    navigate("/admin/login", { replace: true });
   };
 
   return (
     <div className="min-h-screen bg-[linear-gradient(180deg,hsl(var(--muted))_0%,hsl(var(--background))_36%)]">
       <header className="border-b-2 border-secondary bg-background/95 backdrop-blur">
-        <div className="container flex h-20 items-center justify-between gap-4">
+        <div className="container flex min-h-20 items-center justify-between gap-4 py-3">
           <Link to="/admin" className="flex items-center gap-3">
-            <img
-              src={logo}
-              alt="Aayush Enterprises"
-              className="h-10 w-auto max-w-[180px] object-contain"
-            />
+            <img src={logo} alt="Aayush Enterprises" className="h-10 w-auto max-w-[180px] object-contain" />
             <div className="hidden sm:block">
-              <div className="text-xs font-bold uppercase tracking-[0.3em] text-muted-foreground">
-                Content Studio
-              </div>
+              <div className="text-xs font-bold uppercase tracking-[0.3em] text-muted-foreground">Content Studio</div>
               <div className="font-display text-lg uppercase leading-none">Control Panel</div>
             </div>
           </Link>
 
           <div className="flex items-center gap-2">
+            <div className="hidden rounded-full border-2 border-secondary bg-secondary/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.3em] text-secondary md:inline-flex">
+              Admin area
+            </div>
             <Button asChild variant="outline" className="hidden sm:inline-flex border-2 border-secondary font-bold uppercase tracking-wider">
               <Link to="/">View Site</Link>
-            </Button>
-            <Button asChild variant="outline" className="border-2 border-secondary font-bold uppercase tracking-wider">
-              <Link to="/admin/login">Login</Link>
             </Button>
             <Button
               type="button"
@@ -52,22 +48,19 @@ const AdminLayout = () => {
               <LogOut className="mr-2 h-4 w-4" />
               Logout
             </Button>
-            <div className="hidden rounded-full border-2 border-secondary bg-secondary/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.3em] text-secondary sm:inline-flex">
-              UI only
-            </div>
           </div>
         </div>
       </header>
 
-      <div className="container grid gap-8 py-8 lg:grid-cols-[250px_1fr]">
-        <aside className="rounded-2xl border-2 border-secondary bg-card p-4 shadow-bold">
+      <div className="container grid gap-8 py-8 lg:grid-cols-[250px_minmax(0,1fr)]">
+        <aside className="self-start rounded-2xl border-2 border-secondary bg-card p-4 shadow-bold lg:sticky lg:top-8">
           <div className="mb-5 flex items-center gap-3">
             <div className="flex h-11 w-11 items-center justify-center rounded-full bg-primary text-primary-foreground">
               <ShieldCheck className="h-5 w-5" />
             </div>
             <div>
               <div className="text-xs font-bold uppercase tracking-[0.3em] text-muted-foreground">
-                No backend yet
+                Protected workspace
               </div>
               <div className="font-display text-xl uppercase">Workspace Menu</div>
             </div>
