@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import PageHero from "@/components/PageHero";
 import { categories } from "@/data/products";
 import { whatsappLink } from "@/lib/whatsapp";
+import { submitWeb3Form } from "@/lib/web3forms";
 
 const schema = z.object({
   name: z.string().trim().min(2).max(100),
@@ -20,6 +21,7 @@ const schema = z.object({
 });
 
 const Enquiry = () => {
+  const [submitting, setSubmitting] = useState(false);
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -30,23 +32,45 @@ const Enquiry = () => {
     message: "",
   });
 
-  const onSubmit = (e: React.FormEvent) => {
+  const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const r = schema.safeParse(form);
     if (!r.success) {
       toast.error("Please fill all required fields correctly.");
       return;
     }
-    toast.success("Enquiry received! We'll send a quote shortly.");
-    setForm({
-      name: "",
-      email: "",
-      phone: "",
-      company: "",
-      category: "Personal Protective Equipment",
-      quantity: "",
-      message: "",
-    });
+
+    setSubmitting(true);
+
+    try {
+      await submitWeb3Form("New quote request", {
+        name: r.data.name,
+        email: r.data.email,
+        phone: r.data.phone,
+        company: r.data.company || "Not provided",
+        category: r.data.category,
+        quantity: r.data.quantity || "Not provided",
+        message: r.data.message || "No additional requirements",
+      });
+      toast.success("Enquiry received! We'll send a quote shortly.");
+      setForm({
+        name: "",
+        email: "",
+        phone: "",
+        company: "",
+        category: "Personal Protective Equipment",
+        quantity: "",
+        message: "",
+      });
+    } catch (error) {
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Unable to submit your enquiry. Please try again.",
+      );
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const waMsg = `Hi! Quote request:\nCategory: ${form.category}\nQty: ${form.quantity || "TBD"}\nName: ${form.name || "-"}`;
@@ -94,8 +118,8 @@ const Enquiry = () => {
               <Textarea rows={4} value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} className="border-2 border-secondary" maxLength={1000} />
             </div>
             <div className="flex flex-wrap gap-3">
-              <Button type="submit" size="lg" className="bg-secondary text-secondary-foreground font-bold uppercase h-14 px-8 shadow-bold">
-                Submit Enquiry <Send className="ml-2 h-4 w-4" />
+              <Button type="submit" disabled={submitting} size="lg" className="bg-secondary text-secondary-foreground font-bold uppercase h-14 px-8 shadow-bold">
+                {submitting ? "Submitting..." : <>Submit Enquiry <Send className="ml-2 h-4 w-4" /></>}
               </Button>
               <Button type="button" asChild size="lg" variant="outline" className="border-2 border-whatsapp text-whatsapp hover:bg-whatsapp hover:text-white font-bold uppercase h-14 px-8">
                 <a href={whatsappLink(waMsg)} target="_blank" rel="noopener noreferrer">
