@@ -1,4 +1,4 @@
-import { cookieHeader, isSecureRequest } from "./_auth.js";
+import { cookieHeader, isSecureRequest } from "../backend/lib/auth.mjs";
 
 export default async function handler(req, res) {
   res.setHeader("Cache-Control", "no-store");

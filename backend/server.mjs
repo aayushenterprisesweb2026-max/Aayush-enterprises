@@ -31,7 +31,7 @@ import { isBootstrapAdminEmail, seedBootstrapAdmin, verifyBootstrapAdminCredenti
 import { isDatabaseConfigured, pingDatabase, query } from "./lib/db.mjs";
 import { verifyPassword } from "./lib/passwords.mjs";
 import { handleOptions, readJsonBody, sendBuffer, sendError, sendJson, sendText, toInteger } from "./lib/http.mjs";
-import { cookieHeader, createSessionToken, getCookies, isSecureRequest, verifySessionToken } from "../api/_auth.js";
+import { cookieHeader, createSessionToken, getCookies, isSecureRequest, verifySessionToken } from "./lib/auth.mjs";
 
 const host = process.env.HOST || "0.0.0.0";
 const port = toInteger(process.env.PORT || process.env.BACKEND_PORT || 3000, 3000);

@@ -1,4 +1,4 @@
-import { getCookies, verifySessionToken } from "./_auth.js";
+import { getCookies, verifySessionToken } from "../backend/lib/auth.mjs";
 import { isBootstrapAdminEmail } from "../backend/lib/admin-bootstrap.mjs";
 import { query } from "../backend/lib/db.mjs";
 

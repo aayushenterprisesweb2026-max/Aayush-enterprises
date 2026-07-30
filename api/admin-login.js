@@ -1,4 +1,4 @@
-import { cookieHeader, createSessionToken, isSecureRequest } from "./_auth.js";
+import { cookieHeader, createSessionToken, isSecureRequest } from "../backend/lib/auth.mjs";
 import { seedBootstrapAdmin, verifyBootstrapAdminCredentials } from "../backend/lib/admin-bootstrap.mjs";
 import { query } from "../backend/lib/db.mjs";
 import { verifyPassword } from "../backend/lib/passwords.mjs";
