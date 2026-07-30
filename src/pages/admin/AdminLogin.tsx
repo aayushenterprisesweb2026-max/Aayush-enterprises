@@ -52,54 +52,54 @@ const AdminLogin = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,hsla(var(--primary)/0.12),transparent_30%),linear-gradient(180deg,hsl(var(--muted))_0%,hsl(var(--background))_45%)]">
-      <div className="container flex min-h-screen items-center py-10">
-        <div className="grid w-full gap-8 lg:grid-cols-[1.1fr_0.9fr]">
-          <section className="rounded-[2rem] border-2 border-secondary bg-card p-8 shadow-bold md:p-10">
+    <div className="min-h-screen overflow-x-hidden bg-[radial-gradient(circle_at_top_left,hsla(var(--primary)/0.12),transparent_30%),linear-gradient(180deg,hsl(var(--muted))_0%,hsl(var(--background))_45%)]">
+      <div className="container flex min-h-screen items-center py-6 sm:py-8 lg:py-10">
+        <div className="grid w-full max-w-7xl gap-6 lg:gap-8 2xl:grid-cols-[minmax(0,1.1fr)_minmax(420px,0.9fr)]">
+          <section className="min-w-0 rounded-[2rem] border-2 border-secondary bg-card p-6 shadow-bold sm:p-8 md:p-10">
             <div className="inline-flex items-center gap-2 border-2 border-secondary bg-background px-3 py-1.5 text-xs font-bold uppercase tracking-[0.25em] text-secondary">
               <ShieldCheck className="h-4 w-4 text-primary" />
               Content Studio
             </div>
 
-            <div className="mt-6 flex items-center gap-4">
-              <img src={logo} alt="Aayush Enterprises" className="h-14 w-auto" />
-              <div>
+            <div className="mt-6 flex flex-col gap-4 sm:flex-row sm:items-center">
+              <img src={logo} alt="Aayush Enterprises" className="h-12 w-auto sm:h-14" />
+              <div className="min-w-0">
                 <div className="text-xs font-bold uppercase tracking-[0.3em] text-muted-foreground">Protected Area</div>
-                <h1 className="font-display text-3xl uppercase leading-none md:text-4xl">Admin Login</h1>
+                <h1 className="font-display text-2xl uppercase leading-none sm:text-3xl md:text-4xl">Admin Login</h1>
               </div>
             </div>
 
-            <h2 className="mt-10 max-w-3xl font-display text-5xl uppercase leading-[0.92] md:text-7xl">
+            <h2 className="mt-8 max-w-2xl font-display text-4xl uppercase leading-[0.9] sm:text-5xl md:text-6xl 2xl:text-7xl">
               Secure access for the management panel.
             </h2>
-            <p className="mt-5 max-w-2xl text-base leading-relaxed text-muted-foreground md:text-lg">
+            <p className="mt-5 max-w-xl text-sm leading-relaxed text-muted-foreground sm:text-base md:text-lg">
               Sign in to manage products, services and content from the private workspace. Public visitors will be sent here whenever they try to open `/admin`.
             </p>
 
-            <div className="mt-10 grid gap-4 sm:grid-cols-3">
+            <div className="mt-8 grid gap-4 sm:grid-cols-3">
               <div className="rounded-2xl border-2 border-secondary bg-muted/40 p-4">
                 <div className="text-xs font-bold uppercase tracking-[0.25em] text-muted-foreground">Access</div>
-                <div className="mt-2 font-display text-2xl uppercase">Login only</div>
+                <div className="mt-2 font-display text-xl uppercase sm:text-2xl">Login only</div>
               </div>
               <div className="rounded-2xl border-2 border-secondary bg-muted/40 p-4">
                 <div className="text-xs font-bold uppercase tracking-[0.25em] text-muted-foreground">Session</div>
-                <div className="mt-2 font-display text-2xl uppercase">Cookie based</div>
+                <div className="mt-2 font-display text-xl uppercase sm:text-2xl">Cookie based</div>
               </div>
               <div className="rounded-2xl border-2 border-secondary bg-muted/40 p-4">
                 <div className="text-xs font-bold uppercase tracking-[0.25em] text-muted-foreground">Route</div>
-                <div className="mt-2 font-display text-2xl uppercase">/admin</div>
+                <div className="mt-2 font-display text-xl uppercase sm:text-2xl">/admin</div>
               </div>
             </div>
           </section>
 
-          <Card className="border-2 border-secondary bg-secondary text-secondary-foreground shadow-bold">
-            <CardContent className="p-6 md:p-8">
+          <Card className="min-w-0 border-2 border-secondary bg-secondary text-secondary-foreground shadow-bold">
+            <CardContent className="p-6 sm:p-7 md:p-8">
               <div className="inline-flex items-center gap-2 border-2 border-background bg-background px-3 py-1.5 text-xs font-bold uppercase tracking-[0.25em] text-secondary">
                 <LockKeyhole className="h-4 w-4" />
                 Admin Authentication
               </div>
 
-              <h2 className="mt-6 font-display text-4xl uppercase leading-tight md:text-5xl">
+              <h2 className="mt-6 max-w-md font-display text-3xl uppercase leading-tight sm:text-4xl md:text-5xl">
                 Enter the credentials to continue.
               </h2>
               <p className="mt-3 max-w-md text-sm leading-relaxed text-secondary-foreground/80">
