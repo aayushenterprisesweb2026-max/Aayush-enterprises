@@ -1,10 +1,16 @@
-import { cookieHeader, createSessionToken, isSecureRequest } from "../backend/lib/auth.mjs";
+import { applyCommonHeaders, cookieHeader, createSessionToken, isSecureRequest } from "./_auth.js";
 import { seedBootstrapAdmin, verifyBootstrapAdminCredentials } from "../backend/lib/admin-bootstrap.mjs";
 import { query } from "../backend/lib/db.mjs";
 import { verifyPassword } from "../backend/lib/passwords.mjs";
 
 export default async function handler(req, res) {
+  applyCommonHeaders(res);
   res.setHeader("Cache-Control", "no-store");
+
+  if (req.method === "OPTIONS") {
+    res.status(204).end();
+    return;
+  }
 
   if (req.method !== "POST") {
     res.status(405).json({ authenticated: false, error: "Method not allowed" });

@@ -1,9 +1,15 @@
-import { getCookies, verifySessionToken } from "../backend/lib/auth.mjs";
+import { applyCommonHeaders, getCookies, verifySessionToken } from "./_auth.js";
 import { isBootstrapAdminEmail } from "../backend/lib/admin-bootstrap.mjs";
 import { query } from "../backend/lib/db.mjs";
 
 export default async function handler(req, res) {
+  applyCommonHeaders(res);
   res.setHeader("Cache-Control", "no-store");
+
+  if (req.method === "OPTIONS") {
+    res.status(204).end();
+    return;
+  }
 
   try {
     const secret = process.env.ADMIN_SESSION_SECRET;

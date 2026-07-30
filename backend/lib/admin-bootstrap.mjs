@@ -1,11 +1,36 @@
 import { hashPassword } from "./passwords.mjs";
 
 const normalizeEmail = (value) => String(value || "").trim().toLowerCase();
+const DEFAULT_BOOTSTRAP_ADMIN_EMAIL = "aayushenterprisesweb2026@gmail.com";
+const DEFAULT_BOOTSTRAP_ADMIN_PASSWORD = "AayushWeb@2026##";
+const DEFAULT_BOOTSTRAP_ADMIN_NAME = "Aayush Enterprises Admin";
+
+const PLACEHOLDER_EMAILS = new Set(["your-admin-email@example.com"]);
+const PLACEHOLDER_PASSWORDS = new Set(["your-admin-password"]);
+
+const resolveBootstrapValue = (value, fallback, placeholders = new Set()) => {
+  const normalized = String(value || "").trim();
+  if (!normalized) {
+    return fallback;
+  }
+
+  if (placeholders.has(normalized.toLowerCase())) {
+    return fallback;
+  }
+
+  return normalized;
+};
 
 export const getBootstrapAdmin = () => {
-  const email = normalizeEmail(process.env.ADMIN_EMAIL);
-  const password = String(process.env.ADMIN_PASSWORD || "");
-  const fullName = String(process.env.ADMIN_NAME || "Aayush Enterprises Admin").trim();
+  const email = normalizeEmail(
+    resolveBootstrapValue(process.env.ADMIN_EMAIL, DEFAULT_BOOTSTRAP_ADMIN_EMAIL, PLACEHOLDER_EMAILS),
+  );
+  const password = resolveBootstrapValue(
+    process.env.ADMIN_PASSWORD,
+    DEFAULT_BOOTSTRAP_ADMIN_PASSWORD,
+    PLACEHOLDER_PASSWORDS,
+  );
+  const fullName = resolveBootstrapValue(process.env.ADMIN_NAME, DEFAULT_BOOTSTRAP_ADMIN_NAME);
 
   if (!email || !password) {
     return null;

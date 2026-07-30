@@ -2,6 +2,15 @@ import crypto from "node:crypto";
 
 const SESSION_COOKIE = "aayush_admin_session";
 const SESSION_TTL_MS = 8 * 60 * 60 * 1000;
+const corsOrigin = process.env.CORS_ORIGIN || "https://aayushenterprises.in";
+
+const commonHeaders = {
+  "Access-Control-Allow-Origin": corsOrigin,
+  "Access-Control-Allow-Credentials": "true",
+  "Access-Control-Allow-Methods": "GET,POST,PUT,PATCH,DELETE,OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type, Authorization",
+  "Access-Control-Max-Age": "86400",
+};
 
 const base64url = (value) => Buffer.from(value).toString("base64url");
 
@@ -80,10 +89,17 @@ const verifySessionToken = (token, secret, expectedEmail) => {
   }
 };
 
+export const applyCommonHeaders = (res) => {
+  for (const [key, value] of Object.entries(commonHeaders)) {
+    res.setHeader(key, value);
+  }
+};
+
 const isSecureRequest = (req) => req.headers["x-forwarded-proto"] === "https";
 
 export {
   SESSION_COOKIE,
+  commonHeaders,
   cookieHeader,
   createSessionToken,
   getCookies,
