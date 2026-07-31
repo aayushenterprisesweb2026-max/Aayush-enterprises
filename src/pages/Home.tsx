@@ -1,9 +1,10 @@
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
 import {
   AlertTriangle,
   ArrowRight,
   Award,
   CheckCircle2,
+  CircleUserRound,
   Factory,
   HardHat,
   HeartPulse,
@@ -13,11 +14,11 @@ import {
   Users,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious, type CarouselApi } from "@/components/ui/carousel";
 import HeroSlider from "@/components/HeroSlider";
 import ProductCard from "@/components/ProductCard";
 import { products } from "@/data/products";
-import { coreVerticals, brochureHighlights, company } from "@/data/brochure";
+import { coreVerticals } from "@/data/brochure";
 import completeSystemInstallation from "@/assets/complete system installation .jpeg";
 import industrialConsultingServices from "@/assets/industrial consulting services.jpeg";
 import capabilityBuilding from "@/assets/capability building.jpeg";
@@ -57,14 +58,56 @@ const featuredVerticals = [
   { ...coreVerticals[3], image: carHireServices },
 ] satisfies FeaturedVertical[];
 
-const faqs = [
-  { q: "When was Aayush Enterprises established?", a: "The company was established in 2017 and is headquartered in Aurangabad, Maharashtra." },
-  { q: "What are the main business verticals?", a: "The five core verticals are Workplace Safety Gears, System Installations, Car Hire Services, Auditing and Consulting Services and Turn Key Projects." },
-  { q: "Do you also provide training and consulting?", a: "Yes. The brochure includes 5 service verticals covering training, consulting, digital printing, car hire and system installations." },
-  { q: "How many branch offices are mentioned in the brochure?", a: "The brochure lists 3 branch offices: Indore, Pune and Nasik." },
+const reviews = [
+  {
+    name: "Aarav Sharma",
+    role: "Plant Manager, Pune",
+    review: "The team delivered the safety setup on time and kept every detail practical for our plant operations.",
+  },
+  {
+    name: "Priya Nair",
+    role: "Operations Head, Kochi",
+    review: "Clear communication, dependable service, and safety products that actually fit our workplace needs.",
+  },
+  {
+    name: "Rohan Mehta",
+    role: "Project Lead, Indore",
+    review: "Their consulting helped us improve site compliance without slowing down execution on the ground.",
+  },
+  {
+    name: "Sneha Iyer",
+    role: "Admin Manager, Bengaluru",
+    review: "We saw a professional approach from planning to installation, with strong attention to worker safety.",
+  },
+  {
+    name: "Vikram Singh",
+    role: "Site Supervisor, Jaipur",
+    review: "Responsive support, good product knowledge, and a team that understands industrial requirements well.",
+  },
+  {
+    name: "Neha Patel",
+    role: "HR Manager, Ahmedabad",
+    review: "The safety solutions were easy to adopt and improved confidence across our workforce quickly.",
+  },
 ];
 
+const reviewSlides = [reviews.slice(0, 3), reviews.slice(3, 6)];
+
 const Home = () => {
+  const [carouselApi, setCarouselApi] = useState<CarouselApi | null>(null);
+
+  useEffect(() => {
+    if (!carouselApi) {
+      return;
+    }
+
+    const interval = setInterval(() => {
+      carouselApi.scrollNext();
+    }, 4500);
+
+    return () => clearInterval(interval);
+  }, [carouselApi]);
+
   return (
     <>
       <HeroSlider />
@@ -121,57 +164,42 @@ const Home = () => {
       </section>
 
       <section className="py-20 md:py-28 bg-background">
-        <div className="container grid lg:grid-cols-[1fr_1.2fr] gap-12 items-center">
-          <div className="bg-muted border-2 border-secondary p-8">
-            <div className="text-xs font-bold uppercase tracking-[0.3em] text-muted-foreground mb-3">● Company Snapshot</div>
-            <h2 className="font-display text-4xl md:text-5xl uppercase leading-tight">
-              {company.tagline} <br />
-              
-            </h2>
-            <p className="mt-5 text-muted-foreground leading-relaxed">
-              AAYUSH ENTERPRISES" is an organization helping workplaces become more safer and smarter since a decade with dedicated support to ensure precious live's are improved across workplaces
-            </p>
-            <Button asChild className="mt-8 bg-secondary text-secondary-foreground font-bold uppercase h-12 px-7">
-              <Link to="/about">About The Company</Link>
-            </Button>
+        <div className="container">
+          <div className="mb-10 max-w-2xl">
+            <div className="text-xs font-bold uppercase tracking-[0.3em] text-muted-foreground mb-3">People Reviews</div>
+            <h2 className="font-display text-4xl md:text-5xl uppercase leading-tight">What Clients Say</h2>
+         
           </div>
 
-          <div className="grid sm:grid-cols-2 gap-6">
-            {brochureHighlights.map((item, index) => (
-              <div key={item.label} className={`border-2 p-6 ${index % 2 === 0 ? "bg-card border-secondary" : "bg-primary border-primary text-primary-foreground"}`}>
-                <div className="text-xs font-bold uppercase tracking-[0.3em] mb-3 opacity-75">{item.label}</div>
-                <div className="font-display text-3xl uppercase leading-tight">{item.value}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-
-      <section className="py-20 md:py-28 bg-background">
-        <div className="container grid lg:grid-cols-[1fr_1.4fr] gap-12 items-start">
-          <div>
-            <div className="text-xs font-bold uppercase tracking-[0.3em] text-muted-foreground mb-3">
-              <span className="text-primary"></span> FAQ
-            </div>
-            <h2 className="font-display text-4xl md:text-5xl uppercase leading-tight">Questions?<br />We&apos;ve Got Answers.</h2>
-            <p className="mt-4 text-muted-foreground">Use this brochure-backed summary to understand the company scope before you enquire.</p>
-            <Button asChild className="mt-6 bg-secondary text-secondary-foreground font-bold uppercase">
-              <Link to="/contact">Contact Us</Link>
-            </Button>
-          </div>
-          <Accordion type="single" collapsible className="w-full">
-            {faqs.map((f, i) => (
-              <AccordionItem key={i} value={`item-${i}`} className="border-b-2 border-secondary">
-                <AccordionTrigger className="text-left font-display text-xl uppercase hover:no-underline py-5 hover:text-primary-foreground hover:bg-secondary px-2 [&[data-state=open]]:bg-secondary [&[data-state=open]]:text-primary-foreground [&[data-state=open]]:px-4">
-                  {f.q}
-                </AccordionTrigger>
-                <AccordionContent className="text-muted-foreground pt-2 pb-5 px-2 text-base">
-                  {f.a}
-                </AccordionContent>
-              </AccordionItem>
-            ))}
-          </Accordion>
+          <Carousel opts={{ align: "start", loop: true }} setApi={setCarouselApi} className="relative">
+            <CarouselContent>
+              {reviewSlides.map((slide, slideIndex) => (
+                <CarouselItem key={slideIndex}>
+                  <div className="grid gap-6 md:grid-cols-3">
+                    {slide.map((review) => (
+                      <article
+                        key={review.name}
+                        className="rounded-[2rem] border-2 border-secondary/15 bg-gradient-to-b from-white to-slate-50 p-6 shadow-[0_16px_36px_rgba(15,23,42,0.08)]"
+                      >
+                        <div className="flex flex-col items-center text-center">
+                          <div className="flex h-20 w-20 items-center justify-center rounded-full bg-secondary/10 text-secondary">
+                            <CircleUserRound className="h-16 w-16" strokeWidth={1.4} />
+                          </div>
+                          <div className="mt-4 font-display text-xl uppercase leading-none">{review.name}</div>
+                          <div className="mt-2 text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">
+                            {review.role}
+                          </div>
+                        </div>
+                        <p className="mt-5 text-sm leading-7 text-center text-muted-foreground">"{review.review}"</p>
+                      </article>
+                    ))}
+                  </div>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious className="-left-2 top-1/2 -translate-y-1/2 md:-left-4" />
+            <CarouselNext className="-right-2 top-1/2 -translate-y-1/2 md:-right-4" />
+          </Carousel>
         </div>
       </section>
     </>
@@ -179,5 +207,6 @@ const Home = () => {
 };
 
 export default Home;
+
 
 
