@@ -4,8 +4,16 @@ type AdminAuthResponse = {
 
 const configuredApiBase = ((import.meta.env.VITE_API_BASE_URL || "") as string).replace(/\/$/, "");
 const fallbackApiBase = typeof window !== "undefined" ? window.location.origin.replace(/\/$/, "") : "";
+const isLocalOrigin = typeof window !== "undefined" && /^https?:\/\/(localhost|127\.0\.0\.1|\[::1\])(?::\d+)?$/i.test(window.location.origin);
 
-const apiBases = Array.from(new Set([configuredApiBase, fallbackApiBase].filter(Boolean)));
+const apiBases = Array.from(
+  new Set(
+    (isLocalOrigin
+      ? [fallbackApiBase]
+      : [configuredApiBase, fallbackApiBase]
+    ).filter(Boolean),
+  ),
+);
 
 const getOptions = (method: "GET" | "POST" = "GET", body?: BodyInit) => ({
   method,
