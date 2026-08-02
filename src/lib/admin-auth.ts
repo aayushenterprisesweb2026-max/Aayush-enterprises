@@ -2,8 +2,10 @@ type AdminAuthResponse = {
   authenticated: boolean;
 };
 
-const apiBase =
-  ((import.meta.env.VITE_API_BASE_URL || "") as string).replace(/\/$/, "");
+const configuredApiBase = ((import.meta.env.VITE_API_BASE_URL || "") as string).replace(/\/$/, "");
+const fallbackApiBase = typeof window !== "undefined" ? window.location.origin.replace(/\/$/, "") : "";
+
+const apiBases = Array.from(new Set([configuredApiBase, fallbackApiBase].filter(Boolean)));
 
 const getOptions = (method: "GET" | "POST" = "GET", body?: BodyInit) => ({
   method,
@@ -12,11 +14,30 @@ const getOptions = (method: "GET" | "POST" = "GET", body?: BodyInit) => ({
   body,
 });
 
+const fetchWithFallback = async (path: string, options: RequestInit) => {
+  let lastResponse: Response | null = null;
+
+  for (const base of apiBases) {
+    try {
+      const response = await fetch(`${base}${path}`, options);
+      lastResponse = response;
+
+      if (response.status !== 404) {
+        return response;
+      }
+    } catch {
+      // Try the next configured origin.
+    }
+  }
+
+  return lastResponse;
+};
+
 export const verifyAdminSession = async () => {
   try {
-    const response = await fetch(`${apiBase}/api/admin-status`, getOptions());
+    const response = await fetchWithFallback("/api/admin-status", getOptions());
 
-    if (!response.ok) {
+    if (!response || !response.ok) {
       return false;
     }
 
@@ -29,12 +50,10 @@ export const verifyAdminSession = async () => {
 
 export const signInAdmin = async (email: string, password: string) => {
   try {
-    const response = await fetch(
-      `${apiBase}/api/admin-login`,
-      getOptions("POST", JSON.stringify({ email, password })),
-    );
+    const response = await fetchWithFallback("/api/admin-login", getOptions("POST", JSON.stringify({ email, password })));
+    console.log("Admin login response:", response);
 
-    if (!response.ok) {
+    if (!response || !response.ok) {
       return false;
     }
 
@@ -47,7 +66,7 @@ export const signInAdmin = async (email: string, password: string) => {
 
 export const signOutAdmin = async () => {
   try {
-    await fetch(`${apiBase}/api/admin-logout`, getOptions("POST"));
+    await fetchWithFallback("/api/admin-logout", getOptions("POST"));
   } catch {
     // Ignore logout failures; the local session is server-controlled.
   }
