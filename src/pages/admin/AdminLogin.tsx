@@ -13,8 +13,8 @@ const AdminLogin = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const from = (location.state as { from?: { pathname?: string } } | null)?.from?.pathname || "/admin";
-  const [email, setEmail] = useState("aayushenterprisesweb2026@gmail.com");
-  const [password, setPassword] = useState("AayushWeb@2026##");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
@@ -106,7 +106,7 @@ const AdminLogin = () => {
                 The login page is shown every time `/admin` is opened unless a valid session cookie already exists.
               </p>
 
-              <form onSubmit={handleSubmit} className="mt-8 space-y-5">
+              <form onSubmit={handleSubmit} className="mt-8 space-y-5" autoComplete="off">
                 <div className="space-y-2">
                   <Label htmlFor="admin-email" className="text-xs font-bold uppercase tracking-[0.25em] text-secondary-foreground/80">
                     Email
@@ -118,7 +118,7 @@ const AdminLogin = () => {
                       type="email"
                       value={email}
                       onChange={(event) => setEmail(event.target.value)}
-                      autoComplete="email"
+                      autoComplete="off"
                       className="h-12 border-2 border-background bg-background pl-10 text-foreground"
                       placeholder="admin@example.com"
                     />
@@ -136,7 +136,7 @@ const AdminLogin = () => {
                       type={showPassword ? "text" : "password"}
                       value={password}
                       onChange={(event) => setPassword(event.target.value)}
-                      autoComplete="current-password"
+                      autoComplete="new-password"
                       className="h-12 border-2 border-background bg-background pl-10 pr-12 text-foreground"
                       placeholder="Enter password"
                     />
