@@ -12,6 +12,27 @@ const stats = [
   { value: "24", label: "Brands Represented" },
 ];
 
+const aboutGallery = [
+  {
+    src: "/assets/aboutusimages/aboutusimages.jpeg",
+    title: "Worksite protection",
+    text: "Industrial safety essentials built for demanding environments.",
+    badge: "Featured view",
+  },
+  {
+    src: "/assets/aboutusimages/aboutusimages1.jpeg",
+    title: "Safety systems",
+    text: "Products and solutions presented in a clean, modern language.",
+    badge: "Product story",
+  },
+  {
+    src: "/assets/aboutusimages/aboutusimages2.jpeg",
+    title: "Operations on ground",
+    text: "A visual snapshot of the practical, real-world side of the brand.",
+    badge: "On site",
+  },
+] as const;
+
 const About = () => {
   return (
     <>
@@ -46,6 +67,79 @@ const About = () => {
             <Button asChild className="mt-8 bg-secondary text-secondary-foreground font-bold uppercase h-12 px-7">
               <Link to="/brands">See Our Brands</Link>
             </Button>
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-background pb-20 md:pb-28">
+        <div className="container">
+          <div className="mx-auto mb-10 max-w-3xl text-center">
+            <div className="text-xs font-bold uppercase tracking-[0.3em] text-muted-foreground mb-3">
+              <span className="text-primary">•</span> About Us Gallery
+            </div>
+            <h2 className="font-display text-4xl md:text-6xl uppercase leading-[0.92]">
+              A visual story of the
+              <span className="inline-block bg-secondary text-secondary-foreground px-2 mx-2">brand</span>
+              and the work behind it.
+            </h2>
+            <p className="mt-4 text-sm md:text-base text-muted-foreground leading-relaxed">
+              These images help break up the text-heavy story with a more contemporary, magazine-style presentation that highlights the company’s identity, products and on-site presence.
+            </p>
+          </div>
+
+          <div className="grid gap-5 lg:grid-cols-[1.15fr_0.85fr]">
+            <div className="grid gap-5">
+              <article className="group relative overflow-hidden rounded-[2rem] border-2 border-secondary bg-card shadow-bold">
+                <img
+                  src={aboutGallery[0].src}
+                  alt={aboutGallery[0].title}
+                  loading="lazy"
+                  className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-secondary/85 via-secondary/20 to-transparent" />
+                <div className="absolute left-0 right-0 bottom-0 p-6 md:p-8 text-secondary-foreground">
+                  <div className="inline-flex items-center gap-2 rounded-full border border-secondary-foreground/20 bg-background/15 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.25em] backdrop-blur-sm">
+                    {aboutGallery[0].badge}
+                  </div>
+                  <h3 className="mt-4 font-display text-3xl md:text-4xl uppercase leading-none">
+                    {aboutGallery[0].title}
+                  </h3>
+                  <p className="mt-3 max-w-lg text-sm md:text-base text-secondary-foreground/80">
+                    {aboutGallery[0].text}
+                  </p>
+                </div>
+              </article>
+            </div>
+
+            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-1">
+              {aboutGallery.slice(1).map((item, index) => (
+                <article
+                  key={item.src}
+                  className={`group relative overflow-hidden rounded-[2rem] border-2 border-secondary bg-card shadow-bold ${
+                    index === 0 ? "min-h-[18rem]" : "min-h-[18rem]"
+                  }`}
+                >
+                  <img
+                    src={item.src}
+                    alt={item.title}
+                    loading="lazy"
+                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-secondary/85 via-secondary/25 to-transparent" />
+                  <div className="absolute inset-x-0 bottom-0 p-6 text-secondary-foreground">
+                    <div className="inline-flex items-center gap-2 rounded-full border border-secondary-foreground/20 bg-background/15 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.25em] backdrop-blur-sm">
+                      {item.badge}
+                    </div>
+                    <h3 className="mt-4 font-display text-2xl md:text-3xl uppercase leading-none">
+                      {item.title}
+                    </h3>
+                    <p className="mt-3 text-sm leading-relaxed text-secondary-foreground/80">
+                      {item.text}
+                    </p>
+                  </div>
+                </article>
+              ))}
+            </div>
           </div>
         </div>
       </section>
