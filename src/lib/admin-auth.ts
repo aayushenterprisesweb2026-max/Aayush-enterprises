@@ -59,7 +59,6 @@ export const verifyAdminSession = async () => {
 export const signInAdmin = async (email: string, password: string) => {
   try {
     const response = await fetchWithFallback("/api/admin-login", getOptions("POST", JSON.stringify({ email, password })));
-    console.log("Admin login response:", response);
 
     if (!response || !response.ok) {
       return false;
