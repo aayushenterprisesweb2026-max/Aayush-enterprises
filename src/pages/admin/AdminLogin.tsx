@@ -115,12 +115,13 @@ const AdminLogin = () => {
                     <Mail className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                     <Input
                       id="admin-email"
+                      name="admin-login-email"
                       type="email"
                       value={email}
                       onChange={(event) => setEmail(event.target.value)}
                       autoComplete="off"
                       className="h-12 border-2 border-background bg-background pl-10 text-foreground"
-                      placeholder="admin@example.com"
+                      placeholder="Enter email"
                     />
                   </div>
                 </div>
@@ -133,10 +134,11 @@ const AdminLogin = () => {
                     <LockKeyhole className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                     <Input
                       id="admin-password"
+                      name="admin-login-password"
                       type={showPassword ? "text" : "password"}
                       value={password}
                       onChange={(event) => setPassword(event.target.value)}
-                      autoComplete="new-password"
+                      autoComplete="off"
                       className="h-12 border-2 border-background bg-background pl-10 pr-12 text-foreground"
                       placeholder="Enter password"
                     />
